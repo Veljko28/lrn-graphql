@@ -2,13 +2,11 @@ const {ApolloServer, gql} = require('apollo-server');
 
 const users = [
     {
-    name: "test",
-    password: "test"
-    },
-    {
+        id: "1",
         name: "test",
         password: "test"
-    }
+    },
+   
 ];
 
 
@@ -16,7 +14,7 @@ const typeDefs = gql`
  type Query {
     hello: String!
     student: Student!
-    getAllUsers: [UserInfo!]
+    getAllUsers: [User!]!
  }
 
  type Student { 
@@ -31,6 +29,12 @@ const typeDefs = gql`
      students: [Student!]
  }
 
+type User {
+    id: ID!
+    name: String!
+    password: String!
+}
+
 
  input UserInfo {
     name: String!
@@ -39,7 +43,7 @@ const typeDefs = gql`
 
  type Mutation {
      login(info: UserInfo!): Boolean!
-     register(info: UserInfo!): UserInfo!
+     register(info: UserInfo!): User!
  }
 
 `;
@@ -67,8 +71,13 @@ const resolvers = {
             return user.password === args.info.password;    
         },
         register: (parent,args) => {
-            users.push(args.info);
-            return args.info;
+            const user = {
+                id: users.length + 1, 
+                name: args.info.name,
+                password: args.info.password
+            }
+            users.push(user);
+            return user;
         }
     }
 };
