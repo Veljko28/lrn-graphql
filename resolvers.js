@@ -4,13 +4,14 @@ export const resolvers = {
     Query: {
         hello: () => "Hello World",
         posts: () => Post.find(),
-        post: (_id) => {
-            const post = Post.findOne({_id}, (err) => {
-                if (err) {
+        post: (id) => {
+            Post.findOne({id}, (err,post) => {
+                if (err){
                     return null;
                 }
-            } );
-            return post;
+                console.log(post);
+                return post;
+            });
         }
     },
 
