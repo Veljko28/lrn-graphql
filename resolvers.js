@@ -4,7 +4,18 @@ import {User} from  './models/User';
 export const resolvers = {
     Query: {
         users: async () => await User.find(),
+        userById: async (_,{id}) => {
+            const user = await User.findOne({_id: id}, (err) => {
+                if (err){
+                    return null;
+                }
+            });
+            return user;
+        },
+
+
         hello: () => "Hello World",
+        
         posts: async () => await Post.find(),
         postById: async (parent,{id}) => {
             const post = await Post.findOne({_id: id}, (err) => {
@@ -17,10 +28,27 @@ export const resolvers = {
     },
 
     Mutation: {
-        createUser: async (_,{email,password}) => {
+        createUser: async (_,{info: { email,password } }) => {
             const user = new User({email,password});
             await user.save();
             return user;
+        },
+
+         deleteUser: async (_, {id}) => {
+            await User.deleteOne({ _id: id }, (err) => {
+                if (!err) {
+                     return false;
+                }
+            });
+            return true;
+        },
+        updateUser: async (_, {id, info: {email,password} }) => {
+            await User.updateOne({_id: id}, {id,email,password}, (err) => {
+                if (err){
+                    return false;
+                }
+            })
+            return true;
         },
 
         createPost: async (_,{title,desc}) => {

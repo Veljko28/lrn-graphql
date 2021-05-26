@@ -6,11 +6,20 @@ export const typeDefs = gql`
         hello: String!
         posts: [Post!]!
         users: [User!]!
+        userById(id: String): User
         postById(id: String!): Post
     }
 
+    input UserInfo {
+        email: String!
+        password: String!
+    }
+
     type Mutation {
-        createUser(email: String!,password: String!): User!
+        createUser(info: UserInfo): User!
+        deleteUser(id: String!): Boolean!
+        updateUser(id:String, info: UserInfo!): Boolean!
+
         createPost(title: String!, desc: String!): Post!
         deletePost(id: String!): Boolean!
         updatePost(id: String!, title: String!, desc: String!): Boolean!
