@@ -1,7 +1,9 @@
 import { Post } from "./models/Post";
+import {User} from  './models/User';
 
 export const resolvers = {
     Query: {
+        users: async () => await User.find(),
         hello: () => "Hello World",
         posts: async () => await Post.find(),
         postById: async (parent,{id}) => {
@@ -15,6 +17,12 @@ export const resolvers = {
     },
 
     Mutation: {
+        createUser: async (_,{email,password}) => {
+            const user = new User({email,password});
+            await user.save();
+            return user;
+        },
+
         createPost: async (_,{title,desc}) => {
             const post = new Post({title,desc});
             await post.save();
