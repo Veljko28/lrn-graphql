@@ -2,11 +2,9 @@ import {ApolloServer} from 'apollo-server-express';
 import express from 'express';
 import mongoose from 'mongoose';
 
-import {typeDefs} from './typeDefs';
-import {resolvers} from './resolvers';
-
 import * as fs from 'fs';
 import * as path from 'path';
+
 import { GraphQLSchema } from 'graphql';
 import {mergeSchemas, makeExecutableSchema} from 'graphql-tools';
 import {importSchema} from 'graphql-import';
