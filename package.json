@@ -13,6 +13,8 @@
     "apollo-server-express": "^2.24.1",
     "express": "^4.17.1",
     "graphql": "^15.5.0",
+    "graphql-import": "^1.0.2",
+    "graphql-tools": "^7.0.5",
     "mongoose": "^5.12.11",
     "nodemon": "^2.0.7",
     "npm": "^7.14.0"
