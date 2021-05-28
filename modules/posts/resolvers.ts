@@ -1,6 +1,7 @@
 import { Post } from "../../models/Post";
+import {ResolverMap} from '../../other/customTypes';
 
-export const resolvers = {
+export const resolvers: ResolverMap = {
     Query: {
         posts: async () => await Post.find(),
         postById: async (parent: any,{id}: {id: string}) => {

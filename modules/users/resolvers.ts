@@ -1,6 +1,8 @@
 import {User} from  '../../models/User';
+import {ResolverMap} from  '../../other/customTypes';
 
-export const resolvers = {
+
+export const resolvers: ResolverMap = {
     Query: {
         userById: async (_: any,{id}: {id: string}) => {
             const user = await User.findOne({_id: id}, (err: any) => {
