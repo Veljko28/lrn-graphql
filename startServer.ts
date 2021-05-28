@@ -12,7 +12,8 @@ import {importSchema} from 'graphql-import';
 export const startServer = async () => {
     const app = express();
 
-    await mongoose.connect("mongodb://localhost:27017/posts", {useNewUrlParser: true, useUnifiedTopology: true});
+    await mongoose.connect(`mongodb://localhost:27017/
+    ${process.env.TEST_SERVER === 'true' ? 'test' : 'posts'}`, {useNewUrlParser: true, useUnifiedTopology: true});
     
     const schemas: GraphQLSchema[] = [];
 
@@ -29,7 +30,7 @@ export const startServer = async () => {
     
     server.applyMiddleware({app});
     
-    app.listen({port: 4000}, () => {
+    app.listen({port: process.env.TEST_SERVER === 'true' ? 0 : 4000}, () => {
         console.log(`Server listening on http://localhost:4000${server.graphqlPath}`)
     });
 };
