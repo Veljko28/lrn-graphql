@@ -13,7 +13,8 @@
     }
 
     type Mutation {
-        register(info: UserInfo): [Error!]
+        register(info: UserInfo!): [Error!]
+        login(info: UserInfo!): [Error!]
     }
 
     type User {
