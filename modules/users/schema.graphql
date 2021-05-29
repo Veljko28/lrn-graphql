@@ -2,13 +2,18 @@
         userById(id: String): User
     }
 
+    type Error {
+    path: String!
+    message: String!
+}
+
     input UserInfo {
         email: String!
         password: String!
     }
 
     type Mutation {
-        register(info: UserInfo): User!
+        register(info: UserInfo): [Error!]
     }
 
     type User {
