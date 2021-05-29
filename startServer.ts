@@ -2,12 +2,7 @@ import {ApolloServer} from 'apollo-server-express';
 import express from 'express';
 import mongoose from 'mongoose';
 
-import * as fs from 'fs';
-import * as path from 'path';
-
-import { GraphQLSchema } from 'graphql';
-import {mergeSchemas, makeExecutableSchema} from 'graphql-tools';
-import {importSchema} from 'graphql-import';
+import {getSchema} from './getSchema';
 
 export const startServer = async () => {
     const app = express();
@@ -15,18 +10,9 @@ export const startServer = async () => {
     await mongoose.connect(`mongodb://localhost:27017/
     ${process.env.TEST_SERVER === 'true' ? 'test' : 'posts'}`, {useNewUrlParser: true, useUnifiedTopology: true});
     
-    const schemas: GraphQLSchema[] = [];
+   
 
-    const folders = fs.readdirSync(path.join(__dirname, './modules'));
-
-    folders.forEach(folder => {
-        const {resolvers} = require(path.join(__dirname, `./modules/${folder}/resolvers`));
-        const typeDefs = importSchema(path.join(__dirname, `./modules/${folder}/schema.graphql`));
-
-        schemas.push(makeExecutableSchema({resolvers, typeDefs}));
-    })
-
-    const server = new ApolloServer({schema: mergeSchemas({schemas})});
+    const server = new ApolloServer({schema: getSchema() });
     
     server.applyMiddleware({app});
     
