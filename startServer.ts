@@ -1,5 +1,5 @@
 import {ApolloServer} from 'apollo-server-express';
-import express from 'express';
+import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 
 import {getSchema} from './getSchema';
@@ -12,7 +12,7 @@ export const startServer = async () => {
     
    
 
-    const server = new ApolloServer({schema: getSchema() });
+    const server = new ApolloServer({schema: getSchema(), context: ({req,res}) => ({req,res}) });
     
     server.applyMiddleware({app});
     
