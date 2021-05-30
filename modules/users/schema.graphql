@@ -5,7 +5,11 @@
     type Error {
     path: String!
     message: String!
-}
+   }
+
+   type LoginResonse {
+       accessToken: String!
+   }
 
     input UserInfo {
         email: String!
@@ -14,7 +18,7 @@
 
     type Mutation {
         register(info: UserInfo!): [Error!]
-        login(info: UserInfo!): [Error!]
+        login(info: UserInfo!): LoginResonse
     }
 
     type User {

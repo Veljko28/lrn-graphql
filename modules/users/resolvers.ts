@@ -1,6 +1,9 @@
 import {User} from  '../../models/User';
 import {ResolverMap} from  '../../other/customTypes';
 import {formatYupError} from '../../other/formatYupError';
+import {MyContext} from '../../other/MyContext';
+import {CreateAccessToken} from '../../auth'; 
+
 import * as yup from 'yup';
 import bcrypt from 'bcryptjs';
 
@@ -9,7 +12,6 @@ const yupSchema = yup.object().shape( {
     password: yup.string().min(6).max(255)
 })
 
-const InvalidLogin = [{ path: "Invalid Login", message: "Invalid login information"}];
 
 export const resolvers: ResolverMap = {
     Query: {
@@ -40,31 +42,42 @@ export const resolvers: ResolverMap = {
             await user.save();
             return null;
         },
-        login: async (_: any, args: {info: {email: string,password: string}}) => {
+
+        login: async (_: any, args: {info: {email: string,password: string}}, context: MyContext ) => {
             try {
                 await yupSchema.validate(args.info, {abortEarly: false});
             }
             catch (err){
-                return InvalidLogin;
+                return null;
             }
 
             const {info: { email,password } } = args;
 
             const user = await User.findOne({email}, (err: any) => {
                 if (err){
-                    return InvalidLogin;
+                    return null;
                 }
             });
 
-
+            if (user === null) return null;
 
             bcrypt.compare(password, (user as any).password , (err) => {
                 if (err){
-                    return InvalidLogin;
+                    return null;
                 }
             })
             
-            return null;
+            const {res,req} = context;
+
+            res.cookie('jid',
+             CreateAccessToken(user?.id, '7d'), 
+             {
+                 httpOnly: true
+             });
+
+            return {
+                accessToken: CreateAccessToken(user?.id, '15m')
+            };
         }
 }
 }
