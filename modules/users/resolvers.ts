@@ -2,10 +2,15 @@ import {User} from  '../../models/User';
 import {ResolverMap} from  '../../other/customTypes';
 import {formatYupError} from '../../other/formatYupError';
 import {MyContext} from '../../other/MyContext';
-import {CreateAccessToken} from '../../auth'; 
+import {CreateAccessToken} from '../../auth/createAuth'; 
 
 import * as yup from 'yup';
 import bcrypt from 'bcryptjs';
+
+import { addMiddleware } from 'graphql-add-middleware';
+import { getSchema } from '../../getSchema';
+import {isAuth} from '../../auth/isAuth'; 
+
 
 const yupSchema = yup.object().shape( {
     email: yup.string().min(10).max(255).email(),
@@ -16,6 +21,7 @@ const yupSchema = yup.object().shape( {
 export const resolvers: ResolverMap = {
     Query: {
         userById: async (_: any,{id}: {id: string}) => {
+            // addMiddleware(getSchema(), 'Query.userById', isAuth())
             const user = await User.findOne({_id: id}, (err: any) => {
                 if (err){
                     return null;
