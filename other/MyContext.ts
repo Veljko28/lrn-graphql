@@ -4,6 +4,7 @@ export interface MyContext {
     req: Request;
     res: Response;
     payload?: {
-        UserId: string
+        UserId: string,
+        used: Boolean
     }
 }
