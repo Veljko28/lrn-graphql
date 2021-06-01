@@ -7,28 +7,27 @@ import {CreateAccessToken} from '../../auth/createAuth';
 import * as yup from 'yup';
 import bcrypt from 'bcryptjs';
 
-import { addMiddleware } from 'graphql-add-middleware';
-import { getSchema } from '../../getSchema';
+import { combineResolvers as combine } from 'graphql-resolvers';
 import {isAuth} from '../../auth/isAuth'; 
 
 
 const yupSchema = yup.object().shape( {
     email: yup.string().min(10).max(255).email(),
     password: yup.string().min(6).max(255)
-})
+}) 
 
 
 export const resolvers: ResolverMap = {
     Query: {
-        userById: async (_: any,{id}: {id: string}) => {
-            // addMiddleware(getSchema(), 'Query.userById', isAuth())
+        userById: combine(isAuth,  async (_: any,{id}: {id: string}) => {
+            // addMiddleware(getSchema(), 'Query.userById', isAuth()) old code
             const user = await User.findOne({_id: id}, (err: any) => {
                 if (err){
                     return null;
                 }
             });
             return user;
-        },
+        }),
     },
 
     Mutation: {
@@ -76,7 +75,7 @@ export const resolvers: ResolverMap = {
             const {res,req} = context;
 
             res.cookie('jid',
-             CreateAccessToken(user?.id, '7d'), 
+             CreateAccessToken(user?.id,'7d', false), 
              {
                  httpOnly: true
              });
