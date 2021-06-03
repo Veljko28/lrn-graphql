@@ -7,9 +7,10 @@ import { ApolloServer } from 'apollo-server-express';
 import { User } from './models/User';
 import { getSchema } from './getSchema';
 import { CreateAccessToken } from './auth/createAuth'; 
+import "babel-polyfill";
 
 
-export const startServer = async () => {
+export const startServer: () => Promise<void> = async () => {
     const app = express();
     app.use(cookieParser());
 
