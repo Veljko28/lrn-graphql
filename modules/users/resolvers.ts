@@ -7,8 +7,7 @@ import {CreateAccessToken} from '../../auth/createAuth';
 import * as yup from 'yup';
 import bcrypt from 'bcryptjs';
 
-import { combineResolvers as combine } from 'graphql-resolvers';
-import {isAuth} from '../../auth/isAuth'; 
+import {AuthReq} from '../../auth/AuthReq'; 
 
 
 const yupSchema = yup.object().shape( {
@@ -19,7 +18,7 @@ const yupSchema = yup.object().shape( {
 
 export const resolvers: ResolverMap = {
     Query: {
-        userById: combine(isAuth,  async (_: any,{id}: {id: string}) => {
+        userById: AuthReq(async (_: any,{id}: {id: string}) => {
             // addMiddleware(getSchema(), 'Query.userById', isAuth()) old code
             const user = await User.findOne({_id: id}, (err: any) => {
                 if (err){
