@@ -2,8 +2,8 @@ import {User} from  '../../models/User';
 import {ResolverMap} from  '../../other/customTypes';
 import {formatYupError} from '../../other/formatYupError';
 import {MyContext} from '../../other/MyContext';
-import {CreateAccessToken} from '../../auth/createAuth'; 
-
+import {CreateAccessToken} from '../../auth/createAuth';
+import { createConfirmEmail } from '../../confirmEmail/createConfirmEmail';
 import * as yup from 'yup';
 import bcrypt from 'bcryptjs';
 
@@ -30,7 +30,7 @@ export const resolvers: ResolverMap = {
     },
 
     Mutation: {
-        register: async (_: any, args: {info: {email: string,password: string}}) => {
+        register: async (_: any, args: {info: {email: string,password: string}}, {req,redis}: MyContext) => {
             try {
                 await yupSchema.validate(args.info, { abortEarly: false });
             } 
@@ -39,11 +39,26 @@ export const resolvers: ResolverMap = {
             }
             
             const {info: { email,password } } = args;
+
+            const foundUser: any = await User.findOne({email});
+            
+            if ((foundUser as any)?.email == email) return [{
+                path: "email",
+                message: "This email is already in use"
+            }];
+
+
             const hashedPassword = bcrypt.hashSync(password, 10);
             // console.log(hashedPassword);
 
             const user = new User({email,password: hashedPassword});
             await user.save();
+
+            
+            const link = await createConfirmEmail(process.env.HOST as string, user.id,redis);
+
+            console.log(link);
+            
             return null;
         },
 

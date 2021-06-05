@@ -4,6 +4,8 @@ import cookieParser from 'cookie-parser';
 import { verify } from "jsonwebtoken";
 import { ApolloServer } from 'apollo-server-express';
 
+import Redis from 'ioredis';
+
 import { User } from './models/User';
 import { getSchema } from './getSchema';
 import { CreateAccessToken } from './auth/createAuth'; 
@@ -60,7 +62,21 @@ export const startServer: () => Promise<void> = async () => {
 
    });
 
-    const server = new ApolloServer({schema: getSchema(), context: ({req,res}) => ({req,res}) });
+   app.get('/confirm/:id', async (req,res) => {
+       const {id} = req.params;
+       const userId = await redis.get(id);
+    if (userId){
+        await User.updateOne({_id: userId}, {confirmed: true});
+        await redis.del(id);
+        res.send("ok");
+    }
+    else res.send("Invalid");
+
+   })
+
+    const redis = new Redis(); 
+
+    const server = new ApolloServer({schema: getSchema(), context: ({req,res}) => ({req,res,redis}) });
     
     server.applyMiddleware({app});
     

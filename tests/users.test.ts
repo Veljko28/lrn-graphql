@@ -8,7 +8,7 @@ beforeAll( () => {
     process.env.TEST_SERVER = 'true';
 })
 
-const email = "test@gmail.com";
+const email = "test" + Math.random().toString() + "@gmail.com";
 const password = "testpass123";
 
 
