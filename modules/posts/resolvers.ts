@@ -19,19 +19,27 @@ export const resolvers: ResolverMap = {
     },
 
     Mutation: {
-        createPost: AuthReq(async (_: any,{title,desc}: {title:string, desc: string}) => {
+        createPost: 
+        // AuthReq(
+            async (_: any,{title,desc}: {title:string, desc: string}) => {
             const post = new Post({title,desc});
             await post.save();
             return post;
-        }),
-        deletePost: AuthReq(async (_: any, {id}: {id: string}) => {
+        }
+        // )
+        ,
+        deletePost:
+        //  AuthReq(
+            async (_: any, {id}: {id: string}) => {
             await Post.deleteOne({ _id: id }, (err) => {
                 if (!err) {
                      return false;
                 }
             });
             return true;
-        }),
+        }
+        // )
+        ,
         updatePost: AuthReq(async (_: any, 
             {id,title,desc}: {id: string, title: string, desc: string}) => {
             await Post.updateOne({_id: id}, {id,title,desc},{}, (err: any) => {

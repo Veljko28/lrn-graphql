@@ -16,7 +16,7 @@ export const startServer: () => Promise<void> = async () => {
 
     await mongoose.connect(`mongodb://localhost:27017/
     ${process.env.TEST_SERVER === 'true' ? 'test' : 'posts'}`, {useNewUrlParser: true, useUnifiedTopology: true});
-    
+
     const badResponse = {
         ok: false,
         accessToken: ''
