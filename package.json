@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --exec ts-node index.ts",
-    "test": "jest --forceExit",
+    "test": "jest --watch",
     "gen-types": "ts-node ./scripts/getTypes.ts"
   },
   "keywords": [],
@@ -14,6 +14,7 @@
   "dependencies": {
     "@types/graphql-resolvers": "^0.3.0",
     "apollo-server-express": "^2.24.1",
+    "axios": "^0.21.1",
     "babel-polyfill": "^6.26.0",
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
@@ -36,17 +37,22 @@
     "@babel/preset-typescript": "^7.13.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/cookie-parser": "^1.4.2",
+    "@types/ioredis": "^4.26.4",
     "@types/jest": "^26.0.23",
     "@types/jsonwebtoken": "^8.5.1",
+    "@types/uuid": "^8.3.0",
     "@types/yup": "^0.29.11",
     "babel-jest": "^27.0.2",
     "dotenv": "^10.0.0",
     "graphql-resolvers": "^0.4.2",
+    "ioredis": "^4.27.4",
     "jest": "^27.0.1",
     "jsonwebtoken": "^8.5.1",
+    "redis-server": "^1.2.2",
     "regenerator-runtime": "^0.13.7",
     "ts-jest": "^27.0.2",
     "ts-node": "^10.0.0",
+    "uuid": "^8.3.2",
     "yup": "^0.32.9"
   }
 }
