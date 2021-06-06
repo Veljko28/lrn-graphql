@@ -10,7 +10,7 @@ import { User } from './models/User';
 import { getSchema } from './getSchema';
 import { CreateAccessToken } from './auth/createAuth'; 
 import "babel-polyfill";
-
+import "dotenv/config";
 
 export const startServer: () => Promise<void> = async () => {
     const app = express();

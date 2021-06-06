@@ -4,6 +4,7 @@ import {formatYupError} from '../../other/formatYupError';
 import {MyContext} from '../../other/MyContext';
 import {CreateAccessToken} from '../../auth/createAuth';
 import { createConfirmEmail } from '../../confirmEmail/createConfirmEmail';
+import { sendEmail } from '../../confirmEmail/sendEmail';
 import * as yup from 'yup';
 import bcrypt from 'bcryptjs';
 
@@ -57,7 +58,9 @@ export const resolvers: ResolverMap = {
             
             const link = await createConfirmEmail(process.env.HOST as string, user.id,redis);
 
-            console.log(link);
+            // console.log(link);
+
+            await sendEmail(email, link);
             
             return null;
         },
