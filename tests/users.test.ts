@@ -35,6 +35,7 @@ test("Register a new user", async () => {
 
     expect((user[0] as any).password).not.toEqual(password);
     expect((user[0] as any).email).toEqual(email);
+    expect(user.length).toEqual(1);
 })
 
 test("Login the new user", async () => {
