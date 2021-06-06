@@ -91,6 +91,7 @@ export const resolvers: ResolverMap = {
             
             const {res,req} = context;
 
+
             res.cookie('jid',
              CreateAccessToken(user?.id,'7d', false), 
              {

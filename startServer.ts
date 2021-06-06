@@ -5,16 +5,38 @@ import { verify } from "jsonwebtoken";
 import { ApolloServer } from 'apollo-server-express';
 
 import Redis from 'ioredis';
+import connectRedis from 'connect-redis';
 
 import { User } from './models/User';
 import { getSchema } from './getSchema';
 import { CreateAccessToken } from './auth/createAuth'; 
+import session from 'express-session';
 import "babel-polyfill";
 import "dotenv/config";
+
+// const RedisStore = connectRedis(session);
 
 export const startServer: () => Promise<void> = async () => {
     const app = express();
     app.use(cookieParser());
+
+    // app.use( session({
+    //     store: new RedisStore({}),
+    //     name : "qid",
+    //     secret: process.env.SESSION_SECRET as string,
+    //     resave: false,
+    //     saveUninitialized: false,
+    //     cookie : {
+    //         httpOnly: true,
+    //         secure: process.env.NODE_ENV === 'production',
+    //         maxAge: 1000 * 60 * 60 * 2 * 7 // 7 days
+    //     }
+    // }));
+
+    const cors = {
+        credentials: true,
+        origin: "http://localhost:4000"
+    }
 
     await mongoose.connect(`mongodb://localhost:27017/
     ${process.env.TEST_SERVER === 'true' ? 'test' : 'posts'}`, {useNewUrlParser: true, useUnifiedTopology: true});
@@ -76,11 +98,11 @@ export const startServer: () => Promise<void> = async () => {
 
     const redis = new Redis(); 
 
-    const server = new ApolloServer({schema: getSchema(), context: ({req,res}) => ({req,res,redis}) });
+    const server = new ApolloServer({schema: getSchema(), context: ({req,res}) => ({req,res,redis,session}) });
     
     server.applyMiddleware({app});
     
-    app.listen({port: process.env.TEST_SERVER === 'true' ? 0 : 4000}, () => {
+    app.listen({cors, port: process.env.TEST_SERVER === 'true' ? 0 : 4000}, () => {
         console.log(`Server listening on http://localhost:4000${server.graphqlPath}`)
     });
 };
